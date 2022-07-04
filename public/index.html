@@ -1,0 +1,60 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form>
+        <input type="text" name="message" id="message">
+        <button type="submit">Send</button>
+    </form>
+    <h3>Messages</h3>
+    <ul></ul>
+
+    <script>
+        // connecting to websocket
+        const socket = new WebSocket("ws://localhost:4000");
+
+        let messages = []
+
+        // selecting the form
+        const form = document.querySelector("form");
+
+        // displaying messages
+        const showMessages = () => {
+            const list = document.querySelector("ul");
+            while (list.firstChild) {
+                list.removeChild(list.firstChild);
+            }
+
+            messages.forEach((message) => {
+                const listItem = document.createElement("li");
+                listItem.innerText = message;
+                list.appendChild(listItem)
+            })
+
+        }
+
+        // submit event
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            socket.send(form.message.value)
+            console.log("message sent");
+            e.target.reset()
+        })
+
+        // listen to message from the server
+        socket.onmessage = async function(message){
+            console.log("message recieved", message);
+            const note = new Notification("New Message Recieved", {
+                data : messages
+            })
+            messages = JSON.parse(message.data)
+            showMessages()
+        }
+
+    </script>
+</body>
+</html>

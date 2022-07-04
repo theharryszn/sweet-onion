@@ -1,0 +1,13 @@
+{
+  "name": "sweet-onion",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.2.0",
+    "ws": "^8.2.3"
+  }
+}
